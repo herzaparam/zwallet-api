@@ -57,5 +57,4 @@ Frontend dari aplikasi ini dapat dicek pada tautan berikut [coffee-shop-frontend
 - [nodemon](https://www.npmjs.com/package/nodemon)
 - [redis](https://www.npmjs.com/package/redis)
 
-## Created By: 
-- [Herza Paramayudhanto](https://github.com/herzaparam)
+
