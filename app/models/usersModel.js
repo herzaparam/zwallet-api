@@ -48,16 +48,16 @@ exports.getUsersById = (id) => {
 exports.createUsers = (data) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT * FROM users WHERE email = ?",
+      "SELECT * FROM user WHERE email = ?",
       data.email,
       (err, result) => {
         if (result.length > 0) {
           reject(new Error("Email has been registered"));
         } else {
-          connection.query("INSERT INTO users SET ?", data, (err, result) => {
+          connection.query("INSERT INTO user SET ?", data, (err, result) => {
             if (!err) {
               connection.query(
-                "SELECT * FROM users WHERE id = ?",
+                "SELECT * FROM user WHERE id = ?",
                 result.insertId,
                 (err, result) => {
                   if (!err) {
@@ -172,7 +172,7 @@ exports.findUser = (id, message) => {
 exports.login = (data) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT * FROM users WHERE email = ?",
+      "SELECT * FROM user WHERE email = ?",
       data.email,
       (err, result) => {
         if (err) {
@@ -180,7 +180,7 @@ exports.login = (data) => {
         } else {
           if (result.length === 1) {
             const user = result[0];
-            if (result[0].active === 0) {
+            if (result[0].isActive === 0) {
               reject(new Error("Your account not activated"));
             } else {
               bcrypt.compare(
@@ -221,8 +221,11 @@ exports.createUsersToken = (data) => {
 };
 
 exports.createToken = (data) => {
+  
   return new Promise((resolve, reject) => {
     connection.query("INSERT INTO access_token SET ?", data, (err, result) => {
+      console.log(data);
+      console.log(result);
       if (!err) {
         resolve(result);
       } else {
@@ -315,7 +318,7 @@ exports.setActive = (email) => {
 exports.findAccount = (data) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT * FROM users WHERE email = ? AND active = true",
+      "SELECT * FROM user WHERE email = ? AND isActive = true",
       data,
       (err, result) => {
         if (!err) {

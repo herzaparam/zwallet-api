@@ -64,6 +64,7 @@ exports.findOne = (req, res) => {
 };
 
 exports.create = async (req, res) => {
+  
   let image;
   if (!req.file) {
     image = "images\\avatar.png";
@@ -72,39 +73,21 @@ exports.create = async (req, res) => {
   }
 
   const validate = validation.validationUsers(req.body);
-
+  
   if (validate.error) {
     helper.printError(res, 400, validate.error.details[0].message);
     return;
   }
 
-  const {
-    email,
-    password,
-    phoneNumber,
-    username,
-    firstname,
-    lastname,
-    address,
-    gender,
-    dateOfBirth,
-  } = req.body;
-
+  const { email, password, username } = req.body;
+ 
   const data = {
     email,
     password: await hash.hashPassword(password),
-    phoneNumber,
     username,
-    firstname,
-    lastname,
-    address,
-    gender,
-    dateOfBirth,
-    role: 2,
-    active: false,
+    isActive: false,
     image,
   };
-
   usersModel
     .createUsers(data)
     .then((result) => {
@@ -112,18 +95,15 @@ exports.create = async (req, res) => {
         helper.printError(res, 400, "Error creating users");
         return;
       }
+      console.log(result[0]);
       delete result[0].password;
       const payload = {
         id: result[0].id,
         email: result[0].email,
-        phoneNumber: result[0].phoneNumber,
+        phone_number: result[0].phone_number,
         username: result[0].username,
-        firstname: result[0].firstname,
-        lastname: result[0].lastname,
-        address: result[0].address,
-        gender: result[0].gender,
-        dateOfBirth: result[0].dateOfBirth,
-        role: result[0].role,
+        first_name: result[0].first_name,
+        last_name: result[0].last_name,
       };
       jwt.sign(payload, secretKey, { expiresIn: "24h" }, async (err, token) => {
         const data = {
@@ -318,12 +298,11 @@ const removeImage = (filePath) => {
 
 exports.login = (req, res) => {
   const { email, password } = req.body;
-
+  
   const data = {
     email,
     password,
   };
-
   usersModel
     .login(data)
     .then((result) => {
@@ -331,14 +310,11 @@ exports.login = (req, res) => {
       const payload = {
         id: result.id,
         email: result.email,
-        phoneNumber: result.phoneNumber,
+        phone_number: result.phone_number,
         username: result.username,
-        firstname: result.firstname,
-        lastname: result.lastname,
-        address: result.address,
-        gender: result.gender,
-        dateOfBirth: result.dateOfBirth,
-        role: result.role,
+        first_name: result.first_name,
+        last_name: result.last_name,
+        pin: result.pin,
       };
       jwt.sign(payload, secretKey, { expiresIn: "24h" }, async (err, token) => {
         result.token = token;
@@ -362,9 +338,7 @@ exports.login = (req, res) => {
 
 exports.forgotPassword = (req, res) => {
   const email = req.body.email;
-
   const data = email;
-
   usersModel
     .findAccount(data)
     .then((result) => {
@@ -376,14 +350,10 @@ exports.forgotPassword = (req, res) => {
       const payload = {
         id: result[0].id,
         email: result[0].email,
-        phoneNumber: result[0].phoneNumber,
+        pin: result[0].pin,
         username: result[0].username,
-        firstname: result[0].firstname,
-        lastname: result[0].lastname,
-        address: result[0].address,
-        gender: result[0].gender,
-        dateOfBirth: result[0].dateOfBirth,
-        role: result[0].role,
+        first_name: result[0].first_name,
+        last_name: result[0].last_name,
       };
       jwt.sign(payload, secretKey, { expiresIn: "24h" }, async (err, token) => {
         const data = {
