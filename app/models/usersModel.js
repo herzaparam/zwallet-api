@@ -1,10 +1,10 @@
 const bcrypt = require("bcrypt");
 const connection = require("../configs/dbConfig");
 
-exports.getAllUsers = (queryPage, queryPerPage, keyword, sortBy, order) => {
+exports.getAllUsers = (queryPage, queryPerPage, keyword) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT COUNT(*) AS totalData FROM users WHERE username LIKE ? OR email LIKE ?",
+      "SELECT COUNT(*) AS totalData FROM user WHERE username LIKE ? ",
       [`%${keyword}%`, `%${keyword}%`, `%${keyword}%`],
       (err, result) => {
         let totalData, page, perPage, totalPage;
@@ -18,8 +18,8 @@ exports.getAllUsers = (queryPage, queryPerPage, keyword, sortBy, order) => {
         }
         const firstData = perPage * page - perPage;
         connection.query(
-          `SELECT * FROM users WHERE username LIKE ? OR email LIKE ? ORDER BY ${sortBy} ${order} LIMIT ?, ?`,
-          [`%${keyword}%`, `%${keyword}%`, firstData, perPage],
+          `SELECT * FROM user WHERE username LIKE ? LIMIT ?, ?`,
+          [`%${keyword}%`, firstData, perPage],
           (err, result) => {
             if (err) {
               reject(new Error("Internal server error"));
@@ -35,7 +35,7 @@ exports.getAllUsers = (queryPage, queryPerPage, keyword, sortBy, order) => {
 
 exports.getUsersById = (id) => {
   return new Promise((resolve, reject) => {
-    connection.query("SELECT * FROM users WHERE id = ?", id, (err, result) => {
+    connection.query("SELECT * FROM user WHERE id = ?", id, (err, result) => {
       if (!err) {
         resolve(result);
       } else {

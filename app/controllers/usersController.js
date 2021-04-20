@@ -12,11 +12,9 @@ const secretKey = process.env.SECRET_KEY;
 exports.findAll = (req, res) => {
   const { page, perPage } = req.query;
   const keyword = req.query.keyword ? req.query.keyword : "";
-  const sortBy = req.query.sortBy ? req.query.sortBy : "id";
-  const order = req.query.order ? req.query.order : "ASC";
 
   usersModel
-    .getAllUsers(page, perPage, keyword, sortBy, order)
+    .getAllUsers(page, perPage, keyword)
     .then(([totalData, totalPage, result, page, perPage]) => {
       if (result < 1) {
         helper.printError(res, 400, "Users not found");
@@ -47,7 +45,22 @@ exports.findAll = (req, res) => {
 
 exports.findOne = (req, res) => {
   const id = req.auth.id;
-
+  usersModel
+    .getUsersById(id)
+    .then((result) => {
+      if (result < 1) {
+        helper.printError(res, 400, `Cannot find one users with id = ${id}`);
+        return;
+      }
+      delete result[0].password;
+      helper.printSuccess(res, 200, "Find one users successfully", result);
+    })
+    .catch((err) => {
+      helper.printError(res, 500, err.message);
+    });
+};
+exports.findId = (req, res) => {
+  const id = req.params.id
   usersModel
     .getUsersById(id)
     .then((result) => {
