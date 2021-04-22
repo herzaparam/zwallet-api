@@ -5,6 +5,8 @@ const auth = require("../middlewares/auth");
 
 
 router
+    .get("/history", transactionController.getHistory)
+    .post("/history", transactionController.history)
     .put("/transfer", transactionController.transfer);
 
-    module.exports = router;
+module.exports = router;
