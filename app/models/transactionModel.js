@@ -15,11 +15,11 @@ exports.getHistory = (queryPage, queryPerPage, idSender) => {
                     totalPage = Math.ceil(totalData / perPage);
                 }
                 const firstData = perPage * page - perPage;
-                connection.query(`SELECT history.historyID, history.id_sender, history.id_receiver, history.transfer, history.created_at, user.username, user.image FROM history INNER JOIN user ON history.id_receiver = user.id WHERE history.id_sender = ? OR history.id_receiver = ? ORDER BY history.historyID DESC LIMIT ?,?`, [idSender, idSender, firstData, perPage],
+                connection.query(`SELECT history.historyID, history.id_sender, history.id_receiver, history.username_receiver, history.image_receiver, history.transfer, history.created_at, user.username, user.image FROM history INNER JOIN user ON history.id_sender = user.id WHERE history.id_sender = ? OR history.id_receiver = ? ORDER BY history.historyID DESC LIMIT ?,?`, [idSender, idSender, firstData, perPage],
                     (err, result) => {
-                        if(!err){
+                        if (!err) {
                             resolve([totalData, totalPage, result, page, perPage])
-                        }else{
+                        } else {
                             reject(new Error("internal server error"))
                         }
                     })
@@ -72,13 +72,21 @@ exports.transfer = (idSender, amount, idReceiver) => {
 };
 exports.addHistory = (idSender, idReceiver, amount) => {
     return new Promise((resolve, reject) => {
-        connection.query(`INSERT INTO history (id_sender,id_receiver,transfer) VALUES (?,?,?)`, [idSender, idReceiver, amount],
-            (err, result) => {
+        connection.query(`SELECT * FROM user WHERE id = ?`, idReceiver,
+            (err, resultReceiver) => {
                 if (!err) {
-                    resolve(result)
+                    connection.query(`INSERT INTO history (id_sender,id_receiver,username_receiver,image_receiver,transfer) VALUES (?,?,?,?,?)`, [idSender, idReceiver, resultReceiver[0].username, resultReceiver[0].image, amount],
+                        (err, result) => {
+                            if (!err) {
+                                resolve(result)
+                            } else {
+                                reject(new Error("internal server"))
+                            }
+                        })
                 } else {
-                    reject(new Error("internal server"))
+                    reject(new Error("internal server error, cand find userreceiver"))
                 }
             })
+
     })
 }

@@ -439,3 +439,32 @@ exports.resetPassword = async (req, res) => {
     helper.printError(res, 500, err.message);
   }
 };
+exports.deletePhone = (req, res) =>{
+  const id = req.auth.id
+  usersModel
+    .deletePhone(id)
+    .then((result)=>{
+      if(result.affectedRows = 1){
+        helper.printSuccess(res, 200, "delete phone number succesfull", result);
+      }
+    })
+    .catch((err)=>{
+      helper.printError(res, 500, err.message);
+    })
+};
+exports.insertPhone = (req, res) =>{
+  
+  const id = req.auth.id
+  const phoneNumber = parseInt(req.body.number) 
+  
+  usersModel
+    .insertPhone(id, phoneNumber)
+    .then((result)=>{
+      if(result.affectedRows = 1){
+        helper.printSuccess(res, 200, "insert phone number succesfull", result);
+      }
+    })
+    .catch((err)=>{
+      helper.printError(res, 500, err.message);
+    })
+}

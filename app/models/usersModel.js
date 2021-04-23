@@ -362,3 +362,27 @@ exports.checkPassword = (password) => {
     );
   });
 };
+exports.deletePhone = (id) =>{
+  return new Promise((resolve,reject)=>{
+    connection.query(`UPDATE user SET phone_number = null WHERE id = ?`, id,
+    (err,result)=>{
+      if(!err){
+        resolve(result)
+      }else{
+        reject(new Error("internal server error, can't delete phone number"))
+      }
+    })
+  })
+};
+exports.insertPhone = (id, phoneNumber) =>{
+  return new Promise((resolve,reject)=>{
+    connection.query(`UPDATE user SET phone_number = ? WHERE id = ?`, [phoneNumber, id],
+    (err,result)=>{
+      if(!err){
+        resolve(result)
+      }else{
+        reject(new Error("internal server error, can't delete phone number"))
+      }
+    })
+  })
+}
