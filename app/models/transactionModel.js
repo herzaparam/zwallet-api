@@ -1,6 +1,6 @@
 const connection = require("../configs/dbConfig");
 
-exports.getHistory = (queryPage, queryPerPage, idSender) => {
+exports.getHistory = (queryPage, queryPerPage, idSender, orderBy, sort) => {
     return new Promise((resolve, reject) => {
         connection.query(
             "SELECT COUNT(*) AS totalData FROM history WHERE id_sender = ? ", idSender,
@@ -15,7 +15,8 @@ exports.getHistory = (queryPage, queryPerPage, idSender) => {
                     totalPage = Math.ceil(totalData / perPage);
                 }
                 const firstData = perPage * page - perPage;
-                connection.query(`SELECT history.historyID, history.id_sender, history.id_receiver, history.username_receiver, history.image_receiver, history.transfer, history.created_at, user.username, user.image FROM history INNER JOIN user ON history.id_sender = user.id WHERE history.id_sender = ? OR history.id_receiver = ? ORDER BY history.historyID DESC LIMIT ?,?`, [idSender, idSender, firstData, perPage],
+
+                connection.query(`SELECT history.historyID, history.id_sender, history.id_receiver, history.username_receiver, history.image_receiver, history.transfer, history.created_at, user.username, user.image FROM history INNER JOIN user ON history.id_sender = user.id WHERE history.id_sender = ? OR history.id_receiver = ? ORDER BY ${orderBy} ${sort} LIMIT ?,?`, [idSender, idSender, firstData, perPage],
                     (err, result) => {
                         if (!err) {
                             resolve([totalData, totalPage, result, page, perPage])

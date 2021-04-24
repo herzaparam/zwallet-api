@@ -11,10 +11,11 @@ const secretKey = process.env.SECRET_KEY;
 
 exports.findAll = (req, res) => {
   const { page, perPage } = req.query;
+  const idSender = req.auth.id
   const keyword = req.query.keyword ? req.query.keyword : "";
 
   usersModel
-    .getAllUsers(page, perPage, keyword)
+    .getAllUsers(idSender, page, perPage, keyword)
     .then(([totalData, totalPage, result, page, perPage]) => {
       if (result < 1) {
         helper.printError(res, 400, "Users not found");
@@ -108,7 +109,7 @@ exports.create = async (req, res) => {
         helper.printError(res, 400, "Error creating users");
         return;
       }
-      console.log(result[0]);
+      
       delete result[0].password;
       const payload = {
         id: result[0].id,
@@ -191,37 +192,23 @@ exports.verify = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
+  console.log(req.body);
   const id = req.params.id;
-
   const validate = validation.validationUsersUpdate(req.body);
-
+  
   if (validate.error) {
     helper.printError(res, 400, validate.error.details[0].message);
     return;
   }
 
   const {
-    email,
-    phoneNumber,
     username,
-    firstname,
-    lastname,
-    address,
-    gender,
-    dateOfBirth,
   } = req.body;
 
   const data = {
-    email,
-    phoneNumber,
-    username,
-    firstname,
-    lastname,
-    address,
-    gender,
-    dateOfBirth,
+    username
   };
-
+ console.log(data, id);
   usersModel
     .findUser(id, "update")
     .then((result) => {
@@ -239,7 +226,6 @@ exports.update = async (req, res) => {
       return usersModel.updateUsers(id, data);
     })
     .then((result) => {
-      delete result[0].password;
       helper.printSuccess(res, 200, "Users has been updated", result);
     })
     .catch((err) => {
@@ -467,4 +453,10 @@ exports.insertPhone = (req, res) =>{
     .catch((err)=>{
       helper.printError(res, 500, err.message);
     })
+};
+
+exports.accountActiv = (req, res) =>{
+  const id = req.params.id
+
+
 }

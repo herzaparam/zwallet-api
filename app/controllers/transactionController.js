@@ -2,10 +2,10 @@ const transactionModel = require("../models/transactionModel")
 const helper = require("../helpers/printHelper")
 
 exports.getHistory = (req, res) => {
-    const { page, perPage } = req.query;
-    const idSender = req.query.idSender;
+    const { page, perPage, orderBy, sort } = req.query;
+    const idSender = req.auth.id;
 
-    transactionModel.getHistory(page, perPage, idSender)
+    transactionModel.getHistory(page, perPage, idSender, orderBy, sort)
         .then(([totalData, totalPage, result, page, perPage]) => {
             helper.printPaginate(res, 200, `find history succesfull `, totalData, totalPage, result, page, perPage);
         })

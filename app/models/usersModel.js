@@ -1,10 +1,10 @@
 const bcrypt = require("bcrypt");
 const connection = require("../configs/dbConfig");
 
-exports.getAllUsers = (queryPage, queryPerPage, keyword) => {
+exports.getAllUsers = (idSender, queryPage, queryPerPage, keyword) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT COUNT(*) AS totalData FROM user WHERE username LIKE ? ",
+      `SELECT COUNT(*) AS totalData FROM user WHERE username LIKE ?  `,
       [`%${keyword}%`, `%${keyword}%`, `%${keyword}%`],
       (err, result) => {
         let totalData, page, perPage, totalPage;
@@ -18,8 +18,8 @@ exports.getAllUsers = (queryPage, queryPerPage, keyword) => {
         }
         const firstData = perPage * page - perPage;
         connection.query(
-          `SELECT * FROM user WHERE username LIKE ? LIMIT ?, ?`,
-          [`%${keyword}%`, firstData, perPage],
+          `SELECT * FROM user WHERE username LIKE ? AND NOT id = ? LIMIT ?, ?`,
+          [`%${keyword}%`, idSender, firstData, perPage],
           (err, result) => {
             if (err) {
               reject(new Error("Internal server error"));
@@ -69,7 +69,6 @@ exports.createUsers = (data) => {
                 }
               );
             } else {
-              console.log(err.message);
               reject(new Error("Internal server error"));
             }
           });
@@ -81,37 +80,14 @@ exports.createUsers = (data) => {
 
 exports.updateUsers = (id, data) => {
   return new Promise((resolve, reject) => {
-    connection.query(
-      `SELECT * FROM users WHERE NOT id = ? AND email = ?`,
-      [id, data.email],
+    connection.query(`UPDATE user SET username = ?, image = ? WHERE id = ?`, [data.username, data.image, id],
       (err, result) => {
-        if (result.length > 0) {
-          reject(new Error("Email has been registered"));
+        if (!err) {
+          resolve(result)
         } else {
-          connection.query(
-            "UPDATE users SET ? WHERE id = ?",
-            [data, id],
-            (err, result) => {
-              if (!err) {
-                connection.query(
-                  "SELECT * FROM users WHERE id = ?",
-                  id,
-                  (err, result) => {
-                    if (!err) {
-                      resolve(result);
-                    } else {
-                      reject(new Error("Internal server error"));
-                    }
-                  }
-                );
-              } else {
-                reject(new Error("Internal server error"));
-              }
-            }
-          );
+          reject(new Error("Internal server error"));
         }
-      }
-    );
+      })
   });
 };
 
@@ -155,7 +131,7 @@ exports.deleteUsers = (id) => {
 
 exports.findUser = (id, message) => {
   return new Promise((resolve, reject) => {
-    connection.query("SELECT * FROM users WHERE id = ?", id, (err, result) => {
+    connection.query("SELECT * FROM user WHERE id = ?", id, (err, result) => {
       if (!err) {
         if (result.length == 1) {
           resolve(result);
@@ -221,7 +197,7 @@ exports.createUsersToken = (data) => {
 };
 
 exports.createToken = (data) => {
-  
+
   return new Promise((resolve, reject) => {
     connection.query("INSERT INTO access_token SET ?", data, (err, result) => {
       console.log(data);
@@ -362,27 +338,27 @@ exports.checkPassword = (password) => {
     );
   });
 };
-exports.deletePhone = (id) =>{
-  return new Promise((resolve,reject)=>{
+exports.deletePhone = (id) => {
+  return new Promise((resolve, reject) => {
     connection.query(`UPDATE user SET phone_number = null WHERE id = ?`, id,
-    (err,result)=>{
-      if(!err){
-        resolve(result)
-      }else{
-        reject(new Error("internal server error, can't delete phone number"))
-      }
-    })
+      (err, result) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error("internal server error, can't delete phone number"))
+        }
+      })
   })
 };
-exports.insertPhone = (id, phoneNumber) =>{
-  return new Promise((resolve,reject)=>{
+exports.insertPhone = (id, phoneNumber) => {
+  return new Promise((resolve, reject) => {
     connection.query(`UPDATE user SET phone_number = ? WHERE id = ?`, [phoneNumber, id],
-    (err,result)=>{
-      if(!err){
-        resolve(result)
-      }else{
-        reject(new Error("internal server error, can't delete phone number"))
-      }
-    })
+      (err, result) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error("internal server error, can't delete phone number"))
+        }
+      })
   })
 }
