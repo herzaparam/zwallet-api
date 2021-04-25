@@ -78,7 +78,7 @@ exports.findId = (req, res) => {
 };
 
 exports.create = async (req, res) => {
-  
+
   let image;
   if (!req.file) {
     image = "images\\avatar.png";
@@ -87,14 +87,14 @@ exports.create = async (req, res) => {
   }
 
   const validate = validation.validationUsers(req.body);
-  
+
   if (validate.error) {
     helper.printError(res, 400, validate.error.details[0].message);
     return;
   }
 
   const { email, password, username } = req.body;
- 
+
   const data = {
     email,
     password: await hash.hashPassword(password),
@@ -109,7 +109,7 @@ exports.create = async (req, res) => {
         helper.printError(res, 400, "Error creating users");
         return;
       }
-      
+
       delete result[0].password;
       const payload = {
         id: result[0].id,
@@ -192,10 +192,9 @@ exports.verify = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  console.log(req.body);
   const id = req.params.id;
   const validate = validation.validationUsersUpdate(req.body);
-  
+
   if (validate.error) {
     helper.printError(res, 400, validate.error.details[0].message);
     return;
@@ -208,7 +207,6 @@ exports.update = async (req, res) => {
   const data = {
     username
   };
- console.log(data, id);
   usersModel
     .findUser(id, "update")
     .then((result) => {
@@ -297,7 +295,7 @@ const removeImage = (filePath) => {
 
 exports.login = (req, res) => {
   const { email, password } = req.body;
-  
+
   const data = {
     email,
     password,
@@ -375,8 +373,8 @@ exports.forgotPassword = (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-  const email = req.query.email;
-  const token = req.query.token;
+
+  const email = req.body.email;
   const password = req.body.password;
 
   try {
@@ -385,78 +383,67 @@ exports.resetPassword = async (req, res) => {
       helper.printError(res, 400, "Reset password failed! Wrong email.");
       return;
     } else {
-      try {
-        const userToken = await usersModel.findToken(token);
-        if (userToken < 1) {
-          helper.printError(res, 400, "Reset password failed! Wrong token.");
-          return;
-        } else {
-          jwt.verify(token, secretKey, async (err, decoded) => {
-            if (err) {
-              if (err.name === "JsonWebTokenError") {
-                helper.printError(res, 401, "Invalid signature");
-              } else if (err.name === "TokenExpiredError") {
-                await usersModel.deleteToken(email);
-                helper.printError(res, 401, "Token is expired");
-              } else {
-                helper.printError(res, 401, "Token is not active");
-              }
-            } else {
-              const data = await hash.hashPassword(password);
-              await usersModel.setPassword(data, email);
-              if (!data) {
-                helper.printError(res, 400, "Content cannot be empty");
-                return;
-              }
-              helper.printSuccess(
-                res,
-                200,
-                "Password has been changed! Please login.",
-                decoded
-              );
-            }
-          });
-        }
-      } catch (err) {
-        helper.printError(res, 500, err.message);
+      const data = await hash.hashPassword(password);
+      const result = await usersModel.setPassword(data, email);
+      if (!data) {
+        console.log('jalans');
+        helper.printError(res, 400, "Content cannot be empty");
+        return;
       }
+      helper.printSuccess(
+        res,
+        200,
+        "Password has been changed!",
+        result
+      );
+      console.log('jalan');
     }
   } catch (err) {
     helper.printError(res, 500, err.message);
   }
 };
-exports.deletePhone = (req, res) =>{
+exports.deletePhone = (req, res) => {
   const id = req.auth.id
   usersModel
     .deletePhone(id)
-    .then((result)=>{
-      if(result.affectedRows = 1){
+    .then((result) => {
+      if (result.affectedRows = 1) {
         helper.printSuccess(res, 200, "delete phone number succesfull", result);
       }
     })
-    .catch((err)=>{
+    .catch((err) => {
       helper.printError(res, 500, err.message);
     })
 };
-exports.insertPhone = (req, res) =>{
-  
+exports.insertPhone = (req, res) => {
+
   const id = req.auth.id
-  const phoneNumber = parseInt(req.body.number) 
-  
+  const phoneNumber = parseInt(req.body.number)
+
   usersModel
     .insertPhone(id, phoneNumber)
-    .then((result)=>{
-      if(result.affectedRows = 1){
+    .then((result) => {
+      if (result.affectedRows = 1) {
         helper.printSuccess(res, 200, "insert phone number succesfull", result);
       }
     })
-    .catch((err)=>{
+    .catch((err) => {
       helper.printError(res, 500, err.message);
     })
 };
 
-exports.accountActiv = (req, res) =>{
-  const id = req.params.id
+exports.createPin = (req, res) => {
+  const pin = parseInt(req.body.pin)
+  const idSender = req.auth.id
 
+  usersModel.
+    createPin(pin, idSender)
+    .then((result) => {
+      helper.printSuccess(res, 200, "insert pin succesfull", result);
+    })
+    .catch((err) => {
+      helper.printError(res, 500, err.message);
+
+    })
 
 }

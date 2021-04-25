@@ -24,7 +24,7 @@ const send = (destination, token, type) => {
           from: email,
           to: destination,
           subject: "Account Verification",
-          html: `Click this link to verify your account : <a href="${link}/sign-up/?email=${destination}&token=${token}">Activate</a>`,
+          html: `Click this link to verify your account : <a href="${link}/register/activation/?email=${destination}&token=${token}">Activate</a>`,
         });
         resolve(info);
       } else if (type === "forgot") {

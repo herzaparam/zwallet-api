@@ -63,7 +63,6 @@ exports.createUsers = (data) => {
                   if (!err) {
                     resolve(result);
                   } else {
-                    // console.log(err.message);
                     reject(new Error("Internal server error"));
                   }
                 }
@@ -200,8 +199,6 @@ exports.createToken = (data) => {
 
   return new Promise((resolve, reject) => {
     connection.query("INSERT INTO access_token SET ?", data, (err, result) => {
-      console.log(data);
-      console.log(result);
       if (!err) {
         resolve(result);
       } else {
@@ -214,7 +211,7 @@ exports.createToken = (data) => {
 exports.findEmail = (email) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT email FROM users WHERE email = ?",
+      "SELECT email FROM user WHERE email = ?",
       email,
       (err, result) => {
         if (!err) {
@@ -278,7 +275,7 @@ exports.deleteToken = (email) => {
 exports.setActive = (email) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "UPDATE users SET active = true WHERE email = ?",
+      "UPDATE user SET isActive = true WHERE email = ?",
       email,
       (err, result) => {
         if (!err) {
@@ -310,10 +307,11 @@ exports.findAccount = (data) => {
 exports.setPassword = (password, email) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "UPDATE users SET password = ? WHERE email = ?",
+      "UPDATE user SET password = ? WHERE email = ?",
       [password, email],
       (err, result) => {
         if (!err) {
+          console.log(result);
           resolve(result);
         } else {
           reject(new Error("Internal server error"));
@@ -361,4 +359,17 @@ exports.insertPhone = (id, phoneNumber) => {
         }
       })
   })
-}
+};
+exports.createPin = (pin, idSender) =>{
+  console.log(pin, idSender);
+  return new Promise((resolve,reject)=>{
+    connection.query(`UPDATE user SET pin = ? WHERE id = ?`, [pin, idSender], 
+    (err,result)=>{
+      if(!err){
+        resolve(result)
+      }else{
+        reject(new Error("internal server error, can't input pin"))
+      }
+    })
+  })
+};
