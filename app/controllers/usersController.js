@@ -44,6 +44,22 @@ exports.findAll = (req, res) => {
     });
 };
 
+exports.getOne = (req, res) => {
+  const id = req.params.id;
+  usersModel
+    .getUsersById(id)
+    .then((result) => {
+      if (result < 1) {
+        helper.printError(res, 400, `Cannot find one users with id = ${id}`);
+        return;
+      }
+      delete result[0].password;
+      helper.printSuccess(res, 200, "Find one users successfully", result);
+    })
+    .catch((err) => {
+      helper.printError(res, 500, err.message);
+    });
+};
 exports.findOne = (req, res) => {
   const id = req.auth.id;
   usersModel
