@@ -389,10 +389,11 @@ exports.forgotPassword = (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-
-  const email = req.body.email;
-  const password = req.body.password;
-
+  
+  const email = req.query.email || req.body.email;
+  
+  const password = req.body.password ;
+  
   try {
     const user = await usersModel.findEmail(email);
     if (user < 1) {
@@ -402,7 +403,6 @@ exports.resetPassword = async (req, res) => {
       const data = await hash.hashPassword(password);
       const result = await usersModel.setPassword(data, email);
       if (!data) {
-        console.log('jalans');
         helper.printError(res, 400, "Content cannot be empty");
         return;
       }
@@ -412,7 +412,6 @@ exports.resetPassword = async (req, res) => {
         "Password has been changed!",
         result
       );
-      console.log('jalan');
     }
   } catch (err) {
     helper.printError(res, 500, err.message);
