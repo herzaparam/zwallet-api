@@ -82,6 +82,6 @@ also you can check our front end repositories [here](https://documenter.getpostm
 ### Contributor
 [Herza Paramayudhanto](https://github.com/herzaparam)
 
-contact :
+### contact :
 If you want to contact me you can reach me at herzaparam@gmail.com
 
