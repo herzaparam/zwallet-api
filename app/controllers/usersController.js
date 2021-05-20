@@ -117,6 +117,7 @@ exports.create = async (req, res) => {
     username,
     isActive: false,
     image,
+    balance: 100000
   };
   usersModel
     .createUsers(data)
@@ -389,11 +390,11 @@ exports.forgotPassword = (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-  
+
   const email = req.query.email || req.body.email;
-  
-  const password = req.body.password ;
-  
+
+  const password = req.body.password;
+
   try {
     const user = await usersModel.findEmail(email);
     if (user < 1) {

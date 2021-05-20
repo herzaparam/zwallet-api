@@ -311,7 +311,6 @@ exports.setPassword = (password, email) => {
       [password, email],
       (err, result) => {
         if (!err) {
-          console.log(result);
           resolve(result);
         } else {
           reject(new Error("Internal server error"));
@@ -361,7 +360,6 @@ exports.insertPhone = (id, phoneNumber) => {
   })
 };
 exports.createPin = (pin, idSender) =>{
-  console.log(pin, idSender);
   return new Promise((resolve,reject)=>{
     connection.query(`UPDATE user SET pin = ? WHERE id = ?`, [pin, idSender], 
     (err,result)=>{
