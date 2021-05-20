@@ -1,44 +1,10 @@
-# Bohdan Developer Coffee-Backend
-Backend for Coffee Application
+<h1 align="center">Zwallet API</h1>
 
-## API Documentation
-> You can check Postman API Documentation [Here](https://documenter.getpostman.com/view/13256965/TzCTZkQo)
+an API built in express.js and used developed for Zwallet app. This API could do some authentication feature such as register, login, and forgot password. Authentication in this API are using some packages like jwt, nodemailer, hash password and many more. Each user are allowed transfer to another user and get their history which include sorting and pagination limit.
 
-## Application Instalation
-1. Make sure you already have Redis installed on your machine
-2. Clone coffee-shop-backend Repository
-3. Install Required NPM Packages 
-   > `npm install`
-4. Create database named `coffee-shop` and import `coffee-shop.sql` from this project folder
-5. Create `.env` files with this value
-   > - PORT = (Your backend port number, ex:8080)
-   > - HOST = localhost
-   > - PORT_FRONTEND = (Your frontend port number, ex:3000)
-   > - DB_HOST = localhost
-   > - DB_USERNAME = (Your database user)
-   > - DB_PASSWORD = (Your database password)
-   > - DB_NAME = coffee-shop
-   > - EMAIL_USER = (Your own email, ex: user@gmail.com)
-   > - EMAIL_PASS = (Your email password)
-   > - SECRET_KEY = (Your own JWT key)
-   > - REDIS_PORT = (Your redis port, ex: 6379)
-6. Start Redis Server
-   > `redis-server`
-7. Start Application
-   > `npm start`
-
-## Features
-- JWT Authentication
-- Multilevel Authorization (Admin and Customer)
-- Nodemailer For Mailer
-- Upload Image Multer
-- CRUD Products
-- CRUD Orders
-- CRUD Users
-- Redis Server
-
-## Frontend
-Frontend dari aplikasi ini dapat dicek pada tautan berikut [coffee-shop-frontend](https://github.com/bohdan-28/coffee-shop-frontend)
+## Built With
+* [Node.js](https://nodejs.org/en/)
+* [Express.js](https://expressjs.com/)
 
 ## NPM Packages Used
 - [Bcrypt](https://www.npmjs.com/package/bcrypt)
@@ -46,7 +12,6 @@ Frontend dari aplikasi ini dapat dicek pada tautan berikut [coffee-shop-frontend
 - [Dotenv](https://www.npmjs.com/package/dotenv)
 - [Express](https://www.npmjs.com/package/express)
 - [JWT](https://www.npmjs.com/package/jsonwebtoken)
-- [lodash](https://www.npmjs.com/package/lodash)
 - [moment](https://www.npmjs.com/package/moment)
 - [multer](https://www.npmjs.com/package/multer)
 - [morgan](https://www.npmjs.com/package/morgan)
@@ -55,8 +20,68 @@ Frontend dari aplikasi ini dapat dicek pada tautan berikut [coffee-shop-frontend
 - [ip](https://www.npmjs.com/package/ip)
 - [nodemailer](https://www.npmjs.com/package/nodemailer)
 - [nodemon](https://www.npmjs.com/package/nodemon)
-- [redis](https://www.npmjs.com/package/redis)
+
+## Getting Started
+### Prerequisites
+[node.js](https://nodejs.org/en/download/)
+[Postman](https://www.getpostman.com/) for testing
+[Database](database-example.sql)
+
+### Installing
+
+Clone this repository and then use the package manager npm to install dependencies.
+```
+npm install
+```
+## Setup .env example
+
+Create .env file in your root project folder.
+
+```env
+
+PORT="your port"
+DB_HOST = localhost
+DB_USER = root
+DB_NAME = "your database name"
+SECRET_KEY = "your secret key"
+USER_EMAIL = "your email"
+PASSWORD_EMAIL = "your email's password"
+
+```
+## Run the app
+
+Development mode
+
+```bash
+npm run dev
+```
+
+Deploy mode
+
+```bash
+npm start
+```
+## Contributing to Zwallet API
+To contribute to Zwallet API, follow these steps:
+
+1. Fork this repository.
+2. Create a branch: `git checkout -b <branch_name>`.
+3. Make your changes and commit them: `git commit -m '<commit_message>'`
+4. Push to the original branch: `git push origin <project_name>/<location>`
+5. Create the pull request.
+
+Alternatively see the GitHub documentation on [creating a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
+
+## REST API
+
+[![run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/14783281/TzRVe6SL)
 
 ## Front end Repositories
-click [here](https://github.com/herzaparam/zwallet-arka)
+also you can check our front end repositories [here](https://documenter.getpostman.com/view/14783281/TzRa7j1C)
+
+### Contributor
+[Herza Paramayudhanto](https://github.com/herzaparam)
+
+contact :
+If you want to contact me you can reach me at herzaparam@gmail.com
 
