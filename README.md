@@ -3,7 +3,6 @@
  </div> 
 <hr>
  <div align="center">
-  <img width="100" src="https://github.com/herzaparam/zwallet-api/blob/master/images/reactlogo.png" alt="react js">
   <img width="100" src="https://github.com/herzaparam/zwallet-api/blob/master/images/nodejs.png" alt="node js">
   <img width="100" src="https://github.com/herzaparam/zwallet-api/blob/master/images/expresslogo.png" alt="express js">
 </div>
