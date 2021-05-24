@@ -1,4 +1,14 @@
-<h1 align="center">Zwallet API</h1>
+<div align="center">
+  <img width="300" src="https://github.com/herzaparam/zwallet-api/blob/master/images/zwallet%20logo.png" alt="next.js logo">
+ </div> 
+<hr>
+ <div align="center">
+  <img width="100" src="https://github.com/herzaparam/zwallet-api/blob/master/images/reactlogo.png" alt="react js">
+  <img width="100" src="https://github.com/herzaparam/zwallet-api/blob/master/images/nodejs.png" alt="node js">
+  <img width="100" src="https://github.com/herzaparam/zwallet-api/blob/master/images/expresslogo.png" alt="express js">
+</div>
+<hr>
+<br>
 
 an API built in express.js and used developed for Zwallet app. This API could do some authentication feature such as register, login, and forgot password. Authentication in this API are using some packages like jwt, nodemailer, hash password and many more. Each user are allowed transfer to another user and get their history which include sorting and pagination limit.
 
