@@ -86,7 +86,7 @@ Alternatively see the GitHub documentation on [creating a pull request](https://
 [![run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/14783281/TzRVe6SL)
 
 ## Publication
-you can visit our website here : [https://zwallet-arka.vercel.app//](https://zwallet-arka.vercel.app/)
+you can visit our website here : [https://zwallet-arka.vercel.app/](https://zwallet-arka.vercel.app/)
 
 ## Front end Repositories
 also you can check our front end repositories [here](https://github.com/herzaparam/zwallet-arka.git)
